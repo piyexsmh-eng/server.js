@@ -1,0 +1,21 @@
+# ===== SMSCode API =====
+API_KEY=0d7a5d59311792b049ef88b10653a68a4bee5026d35dbd4768758763ca3843f4
+
+# ===== EMAIL CONFIG (Gmail) =====
+EMAIL_USER=your-email@gmail.com
+EMAIL_PASSWORD=your-app-password
+
+# ===== PAYMENT CONFIG (Midtrans) =====
+MIDTRANS_SERVER_KEY=your_midtrans_server_key
+MIDTRANS_CLIENT_KEY=your_midtrans_client_key
+
+# ===== SERVER CONFIG =====
+PORT=3000
+NODE_ENV=development
+SALT=your_salt_for_hashing
+
+# ===== ADMIN CONFIG =====
+ADMIN_KEY=super_secret_admin_key_12345
+
+# ===== SECURITY =====
+SESSION_TIMEOUT=86400000
