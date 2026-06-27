@@ -1,0 +1,937 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SMSCode Pro Advanced - Enterprise OTP Solution</title>
+    <script src="https://app.sandbox.midtrans.com/snap/snap.js" data-client-key="YOUR_MIDTRANS_CLIENT_KEY"></script>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 40px;
+        }
+
+        .section { display: none; }
+        .section.active { display: block; }
+
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .header h1 {
+            color: #333;
+            font-size: 28px;
+            margin-bottom: 5px;
+        }
+
+        .header p {
+            color: #666;
+            font-size: 14px;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 4px 12px;
+            background: #4caf50;
+            color: white;
+            border-radius: 20px;
+            font-size: 11px;
+            margin-left: 10px;
+        }
+
+        .badge.warning {
+            background: #ff9800;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        label {
+            display: block;
+            font-size: 13px;
+            font-weight: 500;
+            color: #555;
+            margin-bottom: 6px;
+        }
+
+        input, select {
+            width: 100%;
+            padding: 10px 12px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-size: 14px;
+        }
+
+        input:focus, select:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .button {
+            width: 100%;
+            padding: 12px;
+            border: none;
+            border-radius: 6px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .btn-primary:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
+        }
+
+        .btn-primary:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        .btn-secondary {
+            background: #e0e0e0;
+            color: #333;
+        }
+
+        .btn-secondary:hover {
+            background: #d0d0d0;
+        }
+
+        .btn-success {
+            background: #4caf50;
+            color: white;
+        }
+
+        .btn-success:hover {
+            background: #45a049;
+        }
+
+        .message {
+            padding: 12px 15px;
+            border-radius: 6px;
+            font-size: 13px;
+            margin-bottom: 15px;
+            display: none;
+        }
+
+        .message.show {
+            display: block;
+        }
+
+        .message.success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+
+        .message.error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+
+        .message.info {
+            background: #d1ecf1;
+            color: #0c5460;
+            border: 1px solid #bee5eb;
+        }
+
+        .switch-section {
+            text-align: center;
+            margin-top: 15px;
+            font-size: 13px;
+            color: #666;
+        }
+
+        .switch-section a {
+            color: #667eea;
+            cursor: pointer;
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .info-box {
+            background: #f0f4ff;
+            border-left: 4px solid #667eea;
+            padding: 12px 15px;
+            border-radius: 6px;
+            font-size: 13px;
+            color: #555;
+            margin-bottom: 15px;
+        }
+
+        .top-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #eee;
+        }
+
+        .user-info {
+            font-size: 13px;
+            color: #666;
+        }
+
+        .user-info strong {
+            color: #667eea;
+        }
+
+        .btn-logout {
+            padding: 6px 12px;
+            background: #ff6b6b;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            font-size: 12px;
+            cursor: pointer;
+        }
+
+        .btn-logout:hover {
+            background: #ff5252;
+        }
+
+        .saldo-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 8px;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .saldo-value {
+            font-size: 28px;
+            font-weight: 700;
+            margin: 10px 0;
+        }
+
+        .tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            border-bottom: 2px solid #eee;
+            overflow-x: auto;
+        }
+
+        .tab-button {
+            padding: 10px 15px;
+            border: none;
+            background: none;
+            cursor: pointer;
+            font-size: 13px;
+            font-weight: 500;
+            color: #999;
+            border-bottom: 2px solid transparent;
+            white-space: nowrap;
+        }
+
+        .tab-button.active {
+            color: #667eea;
+            border-bottom-color: #667eea;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .payment-methods {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        .payment-method {
+            border: 2px solid #ddd;
+            padding: 12px;
+            border-radius: 6px;
+            cursor: pointer;
+            text-align: center;
+            transition: all 0.3s;
+        }
+
+        .payment-method:hover, .payment-method.selected {
+            border-color: #667eea;
+            background: #f0f4ff;
+        }
+
+        .payment-method-icon {
+            font-size: 28px;
+            margin-bottom: 5px;
+        }
+
+        .payment-method-name {
+            font-size: 12px;
+            font-weight: 600;
+            color: #333;
+        }
+
+        @media (max-width: 600px) {
+            .container {
+                padding: 25px;
+            }
+
+            .header h1 {
+                font-size: 22px;
+            }
+
+            .payment-methods {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- AUTH SECTIONS -->
+        <div id="authSection" class="section active">
+            <div class="header">
+                <h1>📱 SMSCode Pro</h1>
+                <p>Enterprise OTP Solution</p>
+            </div>
+
+            <!-- REGISTER -->
+            <div id="registerForm" class="section active">
+                <div style="font-size: 16px; font-weight: 600; color: #333; margin-bottom: 20px;">📝 Daftar Akun</div>
+
+                <div class="message" id="msgRegister"></div>
+
+                <div class="form-group">
+                    <label>Nama Lengkap</label>
+                    <input type="text" id="regFullName" placeholder="John Doe">
+                </div>
+
+                <div class="form-group">
+                    <label>Email</label>
+                    <input type="email" id="regEmail" placeholder="example@email.com">
+                </div>
+
+                <div class="form-group">
+                    <label>Password <span style="color: #999;">(min 8 char, harus ada huruf besar & angka)</span></label>
+                    <input type="password" id="regPassword" placeholder="Password123">
+                </div>
+
+                <button class="button btn-primary" onclick="register()">✓ Daftar</button>
+
+                <div class="switch-section">
+                    Sudah punya akun? <a onclick="switchAuthForm('login')">Login</a>
+                </div>
+            </div>
+
+            <!-- LOGIN -->
+            <div id="loginForm" class="section">
+                <div style="font-size: 16px; font-weight: 600; color: #333; margin-bottom: 20px;">🔐 Login</div>
+
+                <div class="message" id="msgLogin"></div>
+
+                <div class="form-group">
+                    <label>Email</label>
+                    <input type="email" id="loginEmail" placeholder="example@email.com">
+                </div>
+
+                <div class="form-group">
+                    <label>Password</label>
+                    <input type="password" id="loginPassword" placeholder="Password123">
+                </div>
+
+                <button class="button btn-primary" onclick="login()">✓ Login</button>
+
+                <div class="switch-section">
+                    Belum punya akun? <a onclick="switchAuthForm('register')">Daftar</a>
+                </div>
+            </div>
+
+            <!-- 2FA VERIFICATION -->
+            <div id="twoFAForm" class="section">
+                <div style="font-size: 16px; font-weight: 600; color: #333; margin-bottom: 20px;">🔐 Verifikasi 2FA</div>
+
+                <div class="info-box">
+                    ✓ Kode 6 digit sudah dikirim ke email Anda
+                </div>
+
+                <div class="form-group">
+                    <label>Kode 2FA</label>
+                    <input type="text" id="twoFACode" placeholder="000000" maxlength="6">
+                </div>
+
+                <button class="button btn-primary" onclick="verify2FA()">✓ Verifikasi</button>
+            </div>
+        </div>
+
+        <!-- APP SECTION -->
+        <div id="appSection" class="section">
+            <!-- TOP BAR -->
+            <div class="top-bar">
+                <div class="user-info">
+                    👤 <strong id="userEmail"></strong>
+                </div>
+                <button class="btn-logout" onclick="logout()">Logout</button>
+            </div>
+
+            <!-- SALDO CARD -->
+            <div class="saldo-card">
+                <div style="font-size: 13px; opacity: 0.9;">💰 Saldo Anda</div>
+                <div class="saldo-value" id="saldoValue">Rp 0</div>
+            </div>
+
+            <!-- TABS -->
+            <div class="tabs">
+                <button class="tab-button active" onclick="switchTab('payment')">💳 Top-Up</button>
+                <button class="tab-button" onclick="switchTab('buy')">🛒 Beli</button>
+                <button class="tab-button" onclick="switchTab('check')">✅ Cek</button>
+                <button class="tab-button" onclick="switchTab('security')">🔒 Keamanan</button>
+            </div>
+
+            <!-- PAYMENT TAB -->
+            <div id="payment" class="tab-content active">
+                <div style="font-size: 15px; font-weight: 600; color: #333; margin-bottom: 12px;">💳 Metode Pembayaran</div>
+
+                <div class="payment-methods">
+                    <div class="payment-method selected" onclick="selectPayment('midtrans')">
+                        <div class="payment-method-icon">💳</div>
+                        <div class="payment-method-name">Midtrans</div>
+                    </div>
+                    <div class="payment-method" onclick="selectPayment('manual')">
+                        <div class="payment-method-icon">✋</div>
+                        <div class="payment-method-name">Manual Top-up</div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Nominal (Rp)</label>
+                    <input type="number" id="paymentAmount" placeholder="Contoh: 100000" min="10000" max="10000000">
+                </div>
+
+                <button class="button btn-primary" onclick="processPayment()" id="paymentBtn">
+                    💰 Proses Pembayaran
+                </button>
+
+                <div class="message" id="msgPayment"></div>
+            </div>
+
+            <!-- BUY TAB -->
+            <div id="buy" class="tab-content">
+                <div style="font-size: 15px; font-weight: 600; color: #333; margin-bottom: 12px;">🛒 Beli Nomor</div>
+
+                <div class="form-group">
+                    <label>Negara</label>
+                    <select id="country" onchange="loadServices()">
+                        <option value="">-- Pilih Negara --</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label>Platform</label>
+                    <select id="platform" onchange="loadProducts()">
+                        <option value="">-- Pilih Platform --</option>
+                    </select>
+                </div>
+
+                <div id="productsContainer"></div>
+
+                <button class="button btn-primary" onclick="buyNumber()" id="buyBtn">💰 Beli</button>
+
+                <div class="message" id="msgBuy"></div>
+            </div>
+
+            <!-- CHECK TAB -->
+            <div id="check" class="tab-content">
+                <div style="font-size: 15px; font-weight: 600; color: #333; margin-bottom: 12px;">✅ Order Aktif</div>
+                <div id="ordersContainer">
+                    <p style="color: #999;">Tidak ada order aktif</p>
+                </div>
+            </div>
+
+            <!-- SECURITY TAB -->
+            <div id="security" class="tab-content">
+                <div style="font-size: 15px; font-weight: 600; color: #333; margin-bottom: 12px;">🔒 Keamanan Akun</div>
+
+                <div class="info-box">
+                    ✓ Aktifkan 2FA untuk keamanan lebih
+                </div>
+
+                <div id="twoFAStatus"></div>
+
+                <button class="button btn-primary" id="twoFABtn" onclick="toggle2FA()">
+                    Aktifkan 2FA
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let sessionId = localStorage.getItem('sessionId');
+        let userEmail = localStorage.getItem('userEmail');
+        let selectedPaymentMethod = 'midtrans';
+        let selectedProductId = null;
+
+        document.addEventListener('DOMContentLoaded', () => {
+            if (sessionId && userEmail) {
+                showApp();
+            } else {
+                showAuth();
+            }
+        });
+
+        // === AUTH ===
+        function showAuth() {
+            document.getElementById('authSection').classList.add('active');
+            document.getElementById('appSection').classList.remove('active');
+        }
+
+        function showApp() {
+            document.getElementById('authSection').classList.remove('active');
+            document.getElementById('appSection').classList.add('active');
+            document.getElementById('userEmail').textContent = userEmail;
+            loadBalance();
+            loadCountries();
+            checkTwoFAStatus();
+        }
+
+        function switchAuthForm(form) {
+            document.getElementById('registerForm').classList.remove('active');
+            document.getElementById('loginForm').classList.remove('active');
+            document.getElementById(form + 'Form').classList.add('active');
+        }
+
+        async function register() {
+            const fullName = document.getElementById('regFullName').value;
+            const email = document.getElementById('regEmail').value;
+            const password = document.getElementById('regPassword').value;
+
+            if (!fullName || !email || !password) {
+                showMsg('msgRegister', 'Semua field harus diisi', 'error');
+                return;
+            }
+
+            try {
+                const res = await fetch('/api/auth/register', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ fullName, email, password })
+                });
+
+                const data = await res.json();
+
+                if (data.success) {
+                    showMsg('msgRegister', '✓ Silakan verifikasi email Anda!', 'success');
+                    setTimeout(() => switchAuthForm('login'), 2000);
+                } else {
+                    showMsg('msgRegister', data.error, 'error');
+                }
+            } catch (error) {
+                showMsg('msgRegister', 'Gagal register', 'error');
+            }
+        }
+
+        async function login() {
+            const email = document.getElementById('loginEmail').value;
+            const password = document.getElementById('loginPassword').value;
+
+            if (!email || !password) {
+                showMsg('msgLogin', 'Email dan password harus diisi', 'error');
+                return;
+            }
+
+            try {
+                const res = await fetch('/api/auth/login', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ email, password })
+                });
+
+                const data = await res.json();
+
+                if (data.success) {
+                    if (data.needsAuth) {
+                        // 2FA required
+                        document.getElementById('registerForm').classList.remove('active');
+                        document.getElementById('loginForm').classList.remove('active');
+                        document.getElementById('twoFAForm').classList.add('active');
+                        document.getElementById('current2FAEmail').value = email;
+                    } else {
+                        sessionId = data.sessionId;
+                        userEmail = email;
+                        localStorage.setItem('sessionId', sessionId);
+                        localStorage.setItem('userEmail', userEmail);
+                        showApp();
+                    }
+                } else {
+                    showMsg('msgLogin', data.error, 'error');
+                }
+            } catch (error) {
+                showMsg('msgLogin', 'Gagal login', 'error');
+            }
+        }
+
+        async function verify2FA() {
+            const code = document.getElementById('twoFACode').value;
+            const email = document.getElementById('current2FAEmail')?.value || userEmail;
+
+            if (!code || code.length !== 6) {
+                showMsg('msgLogin', 'Kode harus 6 digit', 'error');
+                return;
+            }
+
+            try {
+                const res = await fetch('/api/auth/verify-2fa', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ email, code })
+                });
+
+                const data = await res.json();
+
+                if (data.success) {
+                    sessionId = data.sessionId;
+                    userEmail = data.user.email;
+                    localStorage.setItem('sessionId', sessionId);
+                    localStorage.setItem('userEmail', userEmail);
+                    showApp();
+                } else {
+                    showMsg('msgLogin', data.error, 'error');
+                }
+            } catch (error) {
+                showMsg('msgLogin', 'Gagal verifikasi', 'error');
+            }
+        }
+
+        function logout() {
+            if (confirm('Logout?')) {
+                localStorage.removeItem('sessionId');
+                localStorage.removeItem('userEmail');
+                sessionId = null;
+                userEmail = null;
+                showAuth();
+                document.getElementById('registerForm').classList.add('active');
+                document.getElementById('loginForm').classList.remove('active');
+            }
+        }
+
+        // === PAYMENT ===
+        function selectPayment(method) {
+            selectedPaymentMethod = method;
+            document.querySelectorAll('.payment-method').forEach(el => el.classList.remove('selected'));
+            event.target.closest('.payment-method').classList.add('selected');
+        }
+
+        async function processPayment() {
+            const amount = parseInt(document.getElementById('paymentAmount').value);
+
+            if (!amount || amount < 10000) {
+                showMsg('msgPayment', 'Nominal minimal Rp 10.000', 'error');
+                return;
+            }
+
+            if (selectedPaymentMethod === 'midtrans') {
+                // Midtrans payment
+                try {
+                    const res = await fetch('/api/payment/request-token', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'x-session-id': sessionId
+                        },
+                        body: JSON.stringify({ amount })
+                    });
+
+                    const data = await res.json();
+
+                    if (data.success) {
+                        snap.pay(data.token, {
+                            onSuccess: () => {
+                                showMsg('msgPayment', '✓ Pembayaran berhasil!', 'success');
+                                loadBalance();
+                            },
+                            onError: () => {
+                                showMsg('msgPayment', 'Pembayaran gagal', 'error');
+                            }
+                        });
+                    } else {
+                        showMsg('msgPayment', data.error, 'error');
+                    }
+                } catch (error) {
+                    showMsg('msgPayment', 'Gagal proses pembayaran', 'error');
+                }
+            } else {
+                // Manual top-up (untuk testing)
+                try {
+                    const res = await fetch('/api/user/topup', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'x-session-id': sessionId
+                        },
+                        body: JSON.stringify({ amount })
+                    });
+
+                    const data = await res.json();
+
+                    if (data.success) {
+                        showMsg('msgPayment', '✓ Top-up berhasil!', 'success');
+                        document.getElementById('paymentAmount').value = '';
+                        loadBalance();
+                    }
+                } catch (error) {
+                    showMsg('msgPayment', 'Gagal top-up', 'error');
+                }
+            }
+        }
+
+        // === CATALOG ===
+        async function loadCountries() {
+            try {
+                const res = await fetch('/api/catalog/countries');
+                const data = await res.json();
+
+                const select = document.getElementById('country');
+                data.data.forEach(country => {
+                    const option = document.createElement('option');
+                    option.value = country.id;
+                    option.textContent = `${country.emoji} ${country.name}`;
+                    select.appendChild(option);
+                });
+            } catch (error) {
+                console.error('Error:', error);
+            }
+        }
+
+        async function loadServices() {
+            const countryId = document.getElementById('country').value;
+            if (!countryId) return;
+
+            try {
+                const res = await fetch(`/api/catalog/services?country_id=${countryId}`);
+                const data = await res.json();
+
+                const select = document.getElementById('platform');
+                select.innerHTML = '<option value="">-- Pilih Platform --</option>';
+
+                data.data.forEach(service => {
+                    const option = document.createElement('option');
+                    option.value = service.id;
+                    option.textContent = service.name;
+                    select.appendChild(option);
+                });
+            } catch (error) {
+                console.error('Error:', error);
+            }
+        }
+
+        async function loadProducts() {
+            const countryId = document.getElementById('country').value;
+            const platformId = document.getElementById('platform').value;
+
+            if (!countryId || !platformId) return;
+
+            try {
+                const res = await fetch(
+                    `/api/catalog/products?country_id=${countryId}&platform_id=${platformId}&limit=10`
+                );
+                const data = await res.json();
+
+                const container = document.getElementById('productsContainer');
+                container.innerHTML = '';
+
+                if (!data.data || data.data.length === 0) {
+                    container.innerHTML = '<p style="color: #999;">Produk tidak tersedia</p>';
+                    return;
+                }
+
+                data.data.forEach(product => {
+                    const item = document.createElement('div');
+                    item.style.cssText = 'border:1px solid #ddd;padding:10px;border-radius:6px;margin-bottom:10px;cursor:pointer;';
+                    item.onclick = () => {
+                        selectedProductId = product.id;
+                        document.querySelectorAll('[data-product]').forEach(el => el.style.background = 'white');
+                        item.style.background = '#f0f4ff';
+                    };
+                    item.setAttribute('data-product', product.id);
+                    item.innerHTML = `
+                        <div style="font-weight:600;margin-bottom:5px;">${product.name}</div>
+                        <div style="display:flex;justify-content:space-between;font-size:12px;">
+                            <span>Tersedia: ${product.available}</span>
+                            <span style="color:#667eea;font-weight:600;">Rp ${product.price.toLocaleString('id-ID')}</span>
+                        </div>
+                    `;
+                    container.appendChild(item);
+                });
+            } catch (error) {
+                console.error('Error:', error);
+            }
+        }
+
+        async function buyNumber() {
+            if (!selectedProductId) {
+                showMsg('msgBuy', 'Pilih produk dulu', 'error');
+                return;
+            }
+
+            const btn = document.getElementById('buyBtn');
+            btn.disabled = true;
+            btn.textContent = '⏳ Membeli...';
+
+            try {
+                const res = await fetch('/api/buy', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'x-session-id': sessionId
+                    },
+                    body: JSON.stringify({ product_id: selectedProductId })
+                });
+
+                const data = await res.json();
+
+                if (data.success) {
+                    showMsg('msgBuy', `✓ Nomor: ${data.phone}\nSaldo: Rp ${data.saldoSisa.toLocaleString('id-ID')}`, 'success');
+                    loadBalance();
+                    waitForOTP(data.orderId, data.phone);
+                } else {
+                    showMsg('msgBuy', data.error, 'error');
+                }
+            } catch (error) {
+                showMsg('msgBuy', 'Gagal beli', 'error');
+            } finally {
+                btn.disabled = false;
+                btn.textContent = '💰 Beli';
+            }
+        }
+
+        function waitForOTP(orderId, phone) {
+            let checkCount = 0;
+            const checkInterval = setInterval(async () => {
+                checkCount++;
+
+                try {
+                    const res = await fetch(`/api/check/${orderId}`, {
+                        headers: { 'x-session-id': sessionId }
+                    });
+                    const data = await res.json();
+
+                    if (data.success && data.otp) {
+                        clearInterval(checkInterval);
+                        showMsg('msgBuy', `✓ OTP: ${data.otp}`, 'success');
+                        navigator.clipboard.writeText(data.otp);
+                    } else if (checkCount >= 120) {
+                        clearInterval(checkInterval);
+                        showMsg('msgBuy', 'Timeout', 'error');
+                    }
+                } catch (error) {
+                    console.error('Error:', error);
+                }
+            }, 1000);
+        }
+
+        // === SECURITY ===
+        async function checkTwoFAStatus() {
+            try {
+                const res = await fetch('/api/user/profile', {
+                    headers: { 'x-session-id': sessionId }
+                });
+
+                const data = await res.json();
+
+                if (data.success) {
+                    const status = data.user.twoFAEnabled ? 'Aktif ✓' : 'Tidak Aktif';
+                    const statusColor = data.user.twoFAEnabled ? '#4caf50' : '#ff9800';
+                    document.getElementById('twoFAStatus').innerHTML = `
+                        <p style="margin-bottom:15px;color:#666;">
+                            Status 2FA: <span style="color:${statusColor};font-weight:600;">${status}</span>
+                        </p>
+                    `;
+
+                    const btn = document.getElementById('twoFABtn');
+                    btn.textContent = data.user.twoFAEnabled ? 'Nonaktifkan 2FA' : 'Aktifkan 2FA';
+                    btn.classList.toggle('btn-danger', data.user.twoFAEnabled);
+                }
+            } catch (error) {
+                console.error('Error:', error);
+            }
+        }
+
+        async function toggle2FA() {
+            const endpoint = '/api/user/enable-2fa'; // Ganti dengan disable jika sudah aktif
+
+            try {
+                const res = await fetch(endpoint, {
+                    method: 'POST',
+                    headers: { 'x-session-id': sessionId }
+                });
+
+                const data = await res.json();
+
+                if (data.success) {
+                    showMsg('msgPayment', `✓ ${data.message}`, 'success');
+                    checkTwoFAStatus();
+                }
+            } catch (error) {
+                showMsg('msgPayment', 'Gagal update 2FA', 'error');
+            }
+        }
+
+        // === UTILS ===
+        function switchTab(tabName) {
+            document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
+            document.querySelectorAll('.tab-button').forEach(btn => btn.classList.remove('active'));
+
+            document.getElementById(tabName).classList.add('active');
+            event.target.classList.add('active');
+        }
+
+        async function loadBalance() {
+            try {
+                const res = await fetch('/api/balance', {
+                    headers: { 'x-session-id': sessionId }
+                });
+                const data = await res.json();
+
+                if (data.success) {
+                    document.getElementById('saldoValue').textContent = 
+                        `Rp ${data.data.balance.toLocaleString('id-ID')}`;
+                }
+            } catch (error) {
+                console.error('Error:', error);
+            }
+        }
+
+        function showMsg(elementId, text, type = 'info') {
+            const msg = document.getElementById(elementId);
+            if (msg) {
+                msg.textContent = text;
+                msg.className = `message show ${type}`;
+                if (type !== 'error') {
+                    setTimeout(() => msg.classList.remove('show'), 4000);
+                }
+            }
+        }
+    </script>
+</body>
+</html>
